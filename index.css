@@ -1,0 +1,44 @@
+.row {
+    position: relative;
+    display:block;
+    height: 100px;
+    width: 325px;
+}
+
+.box {
+    height: 100px;
+    width: 100px;
+    display:inline-block;
+    border-style: solid;
+    border-color: black;
+    
+
+}
+
+.box-top {
+
+    border-top-style: none;
+
+}
+
+.box-bottom {
+    border-bottom-style: none;
+}
+
+.box-left {
+    border-left-style: none;
+}
+
+.box-right {
+    border-right-style: none;
+}
+
+.xImage, .oimage {
+    height: 100%;
+    width: 100%;
+}
+
+.hidden {
+    display: none;
+}
+
