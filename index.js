@@ -7,7 +7,7 @@ let gameOver = false
 let lastPlay = null
 
 //Declare abstraction for grid. Each tuple will represent a row of the grid. Values are 0 for 'x', 1 for '0' and 'e' for empty
-const board = [['e','e','e'],['e','e','e'],['e','e','e']]
+let board = [['e','e','e'],['e','e','e'],['e','e','e']]
 
 
 //function to draw grid
@@ -49,37 +49,64 @@ const makeGrid = () => {
 
 //function to check for win condition or tie. Parameter is the last move. If there is a winner, it should be the last player
 const checkWinTie = (row, col) => {
+
     //for ease of checking the column of the last play, create an array which has the board's current state at the column of the last play. This is sort of a transpose and slice operation
     const colArray = []
-    for (let row of board) {
-        colArray.push(row[col])
+    for (let r of board) {
+        colArray.push(r[col])
     }
-    console.log(colArray)
-    console.log(board[row])
     //because we assign 0 to x plays, 1 to o plays, and 'e' to empty we can check for a win by checking the sum (===) across the row, down the col, and along the diagnoal of the current play
     //a sum of 0 means an x win, a sum of 3 means an 'o' win. For now we'll handle the row and column check. I'll leave the diagonal check separately
     //find sum acroos the row
     let rowSum = null
+
     for (let num of board[row]) {
         rowSum += num
     }
-    
-    console.log(rowSum)
     //find sum down column
     let colSum = null
     for (let num of colArray) {
         colSum += num
     }
-    console.log(colSum)
     //see if 'x' or 'o' wins across a row or down a column. If so return true
     if (colSum === 0 || rowSum === 0 || colSum === 3 || rowSum === 3) {
         //figure out who won. If colSum or row Sum was 0, x won. Otherwise, 'o' won because one of the winning conditions was met if we're in here
         let winner = (colSum===0 || rowSum ===0) ? 'x' : 'o'
-        alert(`${winner} wins`)
         gameOver = true
+        winMessage(winner)
         return true
     }
+    //if we pass the row and column win condition, check for a diagonal win. A diagonal win can only occur on a play where row = col or where the row index + col index is 2
+    let diagSum = null
+    if (row===col) {
+        diagSum = board[0][0] +board[1][1] + board[2][2]
+    }
+    if (row + col === 2) {
+        diagSum = board[0][2] + board[1][1] + board[2][0]
+    }
+    if (diagSum === 0 || diagSum === 3) {
+        let winner = (diagSum===0? 'x' : '0')
+        gameOver = true
+        winMessage(winner)
+        return true
+    }
+    //if we pass all win conditions without a return but the board is full, a draw has been played
+    if (!board.flat().includes('e')) {
+        gameOver = true
+        winMessage('none')
+        return true
+    }
+    //if win and tie conditions are not met, game can continue. While maybe not needed, I will return false in case we end up needing to quickly check for an end later
+    return false
+}
 
+const winMessage = (winner) => {
+    const winMessage = document.querySelector('#winMessage')
+    if (winner === 'none') {
+        winMessage.innerHTML = 'Cat\'s game!'
+    } else {
+        winMessage.innerHTML = `Game over! ${winner.toUpperCase()} wins!`
+    }
 }
 
 const addImages = () => {
@@ -111,8 +138,9 @@ const toggleBox = (event) => {
     let xImg = event.target.querySelector('.xImage')
     let oImg = event.target.querySelector('.oImage')
     //Grab the row and col numbers from the target dataset to update the board later
-    const row = event.target.dataset.row
-    const col = event.target.dataset.col
+    let row = parseInt(event.target.dataset.row)
+    let col = parseInt(event.target.dataset.col)
+    //check that game is still open
     if (!gameOver) {
         //check that square is empty
         if (xImg.classList.contains('hidden') && oImg.classList.contains('hidden')) {
@@ -125,7 +153,6 @@ const toggleBox = (event) => {
 
                 //assign correct value to the board
                 board[row][col] = 0
-                console.log(board)
                 //call to check for win/tie. Pass last play to identify possible winner
                 checkWinTie(row, col)
             } else if (lastPlay === 'x') {
@@ -135,14 +162,42 @@ const toggleBox = (event) => {
                 lastPlay = 'o'
                 //update board
                 board[row][col] = 1
-                console.log(board)
                 //check for win/tie. Pass last play to identify possible winner
                 checkWinTie(row, col)
 
             }
         }
+    //if game is over, alert players and encourage new play
+    } else {
+        alert("Game is over! Click the new game button to start over")
     }
     
+
+}
+
+const newGame = () => {
+    //hide all plays made
+    const xImgs = document.querySelectorAll('.xImage')
+    const oImgs = document.querySelectorAll('.oImage')
+    for (img of xImgs) {
+        if (!img.classList.contains('hidden')) {
+            img.classList.toggle('hidden')
+        }
+    }
+    for (img of oImgs) {
+        if (!img.classList.contains('hidden')) {
+            img.classList.toggle('hidden')
+        }
+    }
+    //set board abstraction back to empty
+    board = [['e','e','e'],['e','e','e'],['e','e','e']]
+    //set last play to null
+    lastPlay = null
+    //set gameOver to false
+    gameOver = false
+    //restmessage
+    const messageNode = document.querySelector('#winMessage').innerText=''
+
 
 }
 
@@ -151,6 +206,8 @@ const addListeners = () => {
     for (box of boxes) {
         box.addEventListener('click',toggleBox)
     }
+    const newGameBtn = document.querySelector('#newGame')
+    newGameBtn.addEventListener('click', newGame)
 }
 
 

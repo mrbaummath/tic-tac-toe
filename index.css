@@ -1,8 +1,24 @@
+body {
+    font-family: arial;
+    background-color: magenta
+}
+
+.text {
+    margin: 0 auto;
+    text-align: center
+}
+
+.container {
+    display:block;
+    margin-bottom: 20px
+}
+
 .row {
     position: relative;
     display:block;
     height: 100px;
     width: 325px;
+    margin: 0 auto
 }
 
 .box {
