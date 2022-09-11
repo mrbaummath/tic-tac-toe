@@ -171,8 +171,19 @@ const toggleBox = (event) => {
     } else {
         alert("Game is over! Click the new game button to start over")
     }
-    
+    //call to current play to change player
+    currentPlay(lastPlay)
+}
 
+const currentPlay = (lastPlay) => {
+    const currentPlay = document.querySelector('#currentPlay')
+    if (gameOver) {
+        currentPlay.innerText = '---'
+    } else if (lastPlay==='o' || lastPlay === null) {
+        currentPlay.innerText = 'Current player: X'
+    } else {
+        currentPlay.innerText = 'Current player: O'
+    }
 }
 
 const newGame = () => {
