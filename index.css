@@ -3,6 +3,8 @@ body {
     background-color: magenta
 }
 
+
+
 .text {
     margin: 0 auto;
     text-align: center
@@ -10,7 +12,7 @@ body {
 
 .container {
     display:block;
-    margin-bottom: 20px
+    margin-bottom: 10px
 }
 
 .row {
@@ -19,6 +21,11 @@ body {
     height: 100px;
     width: 325px;
     margin: 0 auto
+}
+
+p {
+    font-size: 14px;
+    margin: 10px
 }
 
 .box {
@@ -49,9 +56,18 @@ body {
     border-right-style: none;
 }
 
-.xImage, .oimage {
+.xImage {
     height: 100%;
     width: 100%;
+
+}
+
+.oImage{
+    height: 100%;
+    width: 100%;
+    
+
+   
 }
 
 .hidden {
